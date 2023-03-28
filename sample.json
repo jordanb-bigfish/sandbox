@@ -95,6 +95,7 @@
     "taglib": {
       "taglib-uri": "cofax.tld",
       "taglib-location": "/WEB-INF/tlds/cofax.ld"
-    }
+    },
+    "swag": {}
   }
 }
