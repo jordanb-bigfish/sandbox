@@ -17,5 +17,5 @@ jobs:
       - name: Validate JSON
         run: |
           for file in $(find . -type f -name "*.json"); do
-            python3 -m json.tool $file > /dev/null
+            python3 -m json.tool "$file" > /dev/null
           done
