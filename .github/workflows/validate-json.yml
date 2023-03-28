@@ -19,6 +19,8 @@ jobs:
         run: |
           find . -type f -name "*.json" -print0 | xargs -0 -n1 sh -c '
             file="$0"
-            if ! python3 -m json.tool "$file" 2>&1 | { read -r output; printf "Error in JSON file $file:\t%s\n" "$output"; }; then
+            if ! python3 -m json.tool "$file" > tmpfile 2>&1; then
+              echo "Error in JSON file $file: $(cat tmpfile)"
+              rm tmpfile
               exit 1
             fi'
