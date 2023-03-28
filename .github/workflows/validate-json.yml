@@ -17,8 +17,8 @@ jobs:
       - name: Validate JSON
         run: |
           find . -type f -name "*.json" -print0 | xargs -0 -n1 sh -c '
-            file="$1"
+            file="$0"
             if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
               echo "JSON file $file is invalid."
               exit 1
-            fi' _ "{}"
+            fi'
