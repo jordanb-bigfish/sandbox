@@ -20,7 +20,6 @@ jobs:
           find . -type f -name "*.json" -print0 | xargs -0 -n1 sh -c '
             file="$0"
             if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
-              error=$(python3 -c "import json,sys; print(json.load(open('$file')), file=sys.stderr)")
-              echo -e "Error in JSON file $file:\t$error\n"
+              echo "Error in JSON file: "$file":$(python3 -m json.tool "$file" 2>&1 | sed "s/^/\t/")"
               exit 1
             fi'
