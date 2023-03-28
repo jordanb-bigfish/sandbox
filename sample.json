@@ -97,7 +97,8 @@
       "taglib-location": "/WEB-INF/tlds/cofax.ld"
     },
     "swag": {
-      "woop": "woop"
+      "woop": "woop",
+      "woop2": "woop2"
     }
   }
 }
