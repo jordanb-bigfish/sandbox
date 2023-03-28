@@ -16,6 +16,9 @@ jobs:
           sudo apt-get install python3
       - name: Validate JSON
         run: |
-          for file in $(find . -type f -name "*.json"); do
-            python3 -m json.tool "$file" > /dev/null
-          done
+          find . -type f -name "*.json" -print0 | xargs -0 -n1 sh -c '
+            file="$1"
+            if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
+              echo "JSON file $file is invalid."
+              exit 1
+            fi' _ "{}"
