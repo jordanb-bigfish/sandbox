@@ -1,4 +1,4 @@
-name: JSON syntax check
+name: JSON Check
 
 on:
   pull_request:
@@ -7,32 +7,20 @@ on:
       - '**.json'
 
 jobs:
-  test:
+  validate-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Find JSON files
+      - name: Install dependencies
         run: |
-          find . -name '*.json' -print0 | xargs -0 -r -L 1 sh -c '
-            for file do
-              if ! python3 -m json.tool "$file" >/dev/null 2>&1; then
-                echo "$file"
-              fi
-            done' sh
-        id: failed-files
-      - name: Comment failed files
-        if: always()
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const failedFiles = `${{ steps.failed-files.outputs.stdout }}`;
-            if (failedFiles) {
-              const message = `The following JSON files have syntax errors:\n\`\`\`${failedFiles}\`\`\``;
-              github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: message
-              });
-            }
+          sudo apt-get update
+          sudo apt-get install python3
+      - name: Validate JSON
+        run: |
+          find . -type f -name "*.json" -print0 | xargs -0 -n1 sh -c '
+            file="$0"
+            if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
+              echo "Error in JSON file $file:"
+              python3 -m json.tool "$file"
+              exit 1
+            fi'
