@@ -1,4 +1,4 @@
-name: JSON check
+name: JSON Check
 
 on:
   push:
@@ -6,11 +6,16 @@ on:
       - '**.json'
 
 jobs:
-  test:
+  validate-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: json-syntax-check
-        uses: bigfishgames/json-syntax-check@1.0.0
-        with:
-          pattern: "\\.json$"
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3
+      - name: Validate JSON
+        run: |
+          for file in $(find . -type f -name "*.json"); do
+            python3 -m json.tool $file > /dev/null
+          done
