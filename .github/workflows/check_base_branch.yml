@@ -1,0 +1,32 @@
+name: Is Branch Based Off of Dev?
+
+on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
+
+jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Necessary to fetch all commits
+
+    - name: Check for bot merge commits
+      run: |
+        # Get all commits for this PR
+        commits=$(git log --pretty=format:'%H %an' origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
+        echo "$commits"
+
+        # Check each commit for the offending bot
+        echo "$commits" | while read commit author; do
+          if [[ $author == "github-actions[bot]" ]]; then
+            echo "Please base your changes off of dev. Merge commit from github-actions[bot] found in commit $commit. Failing..."
+            exit 1
+          fi
+        done
+

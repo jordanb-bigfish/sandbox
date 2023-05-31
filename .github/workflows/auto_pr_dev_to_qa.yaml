@@ -1,0 +1,36 @@
+name: Auto QA PR on successful merge to dev
+
+on:
+  pull_request:
+    types: closed
+    branches: dev
+
+jobs:
+  pr_creation:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        ref: dev
+
+    - name: Create PR
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: dev
+        destination_branch: QA
+        pr_title: "Pulling dev into QA"
+        pr_body: |
+          :crown: *An automated PR*
+  
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - id: automerge
+        name: automerge
+        uses: "bigfishgames/automerge-action@v1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_ERROR_FAIL: "true"
