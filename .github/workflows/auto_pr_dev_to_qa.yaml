@@ -20,7 +20,7 @@ jobs:
       uses: repo-sync/pull-request@v2
       with:
         source_branch: dev
-        destination_branch: QA
+        destination_branch: qa
         pr_title: "Pulling dev into QA"
         pr_body: |
           :crown: *An automated PR*
