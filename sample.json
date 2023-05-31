@@ -46,7 +46,7 @@
           "dataStoreMaxConns": 100,
           "dataStoreConnUsageLimit": 100,
           "dataStoreLogLevel": "debug",
-          "maxUrlLength": 500"
+          "maxUrlLength": 500
         }
       },
       {
